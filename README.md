@@ -116,8 +116,6 @@ No modules.
 | <a name="output_aws_security_group_worker-node_id"></a> [aws\_security\_group\_worker-node\_id](#output\_aws\_security\_group\_worker-node\_id) | n/a |
 | <a name="output_rsc_exocompute_subnet_1_id"></a> [rsc\_exocompute\_subnet\_1\_id](#output\_rsc\_exocompute\_subnet\_1\_id) | n/a |
 | <a name="output_rsc_exocompute_subnet_2_id"></a> [rsc\_exocompute\_subnet\_2\_id](#output\_rsc\_exocompute\_subnet\_2\_id) | n/a |
-| <a name="output_rsc_exocompute_subnet_public_id"></a> [rsc\_exocompute\_subnet\_public\_id](#output\_rsc\_exocompute\_subnet\_public\_id) | n/a |
-| <a name="output_rsc_exocompute_worker_node_security_group_id"></a> [rsc\_exocompute\_worker\_node\_security\_group\_id](#output\_rsc\_exocompute\_worker\_node\_security\_group\_id) | n/a |
 
 
 <!-- END_TF_DOCS -->
