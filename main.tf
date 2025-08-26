@@ -1,20 +1,35 @@
 data "aws_region" "current" {}
 
+data "aws_availability_zones" "available" {
+  state = "available"
+
+  lifecycle {
+    postcondition {
+      condition     = length(self.names) > 1
+      error_message = "Region must have at least 2 availability zones."
+    }
+  }
+}
+
+locals {
+  az1 = var.use_availability_zones_a_and_b ? "${data.aws_region.current.name}a" : data.aws_availability_zones.available.names[0]
+  az2 = var.use_availability_zones_a_and_b ? "${data.aws_region.current.name}b" : data.aws_availability_zones.available.names[1]
+}
+
 resource "aws_vpc" "rsc_exocompute" {
-  cidr_block = var.aws_exocompute_vpc_cidr
+  cidr_block           = var.aws_exocompute_vpc_cidr
   enable_dns_hostnames = true
   enable_dns_support   = true
 
   tags = {
     Name = var.aws_exocompute_vpc_name
   }
-  
 }
 
 resource "aws_vpc_endpoint" "rsc_exocompute" {
-  vpc_id       = aws_vpc.rsc_exocompute.id
-  service_name = "com.amazonaws.${data.aws_region.current.name}.s3"
-  route_table_ids = [aws_route_table.rsc_exocompute_private.id]
+  vpc_id            = aws_vpc.rsc_exocompute.id
+  service_name      = "com.amazonaws.${data.aws_region.current.name}.s3"
+  route_table_ids   = [aws_route_table.rsc_exocompute_private.id]
   vpc_endpoint_type = "Gateway"
 
   tags = {
@@ -54,7 +69,7 @@ resource "aws_vpc_endpoint" "eks" {
     aws_security_group.control-plane.id,
     aws_security_group.worker-node.id
   ]
-  
+
   subnet_ids = [
     aws_subnet.rsc_exocompute_subnet_1.id,
     aws_subnet.rsc_exocompute_subnet_2.id
@@ -76,7 +91,7 @@ resource "aws_vpc_endpoint" "ecr_api" {
     aws_security_group.control-plane.id,
     aws_security_group.worker-node.id
   ]
-  
+
   subnet_ids = [
     aws_subnet.rsc_exocompute_subnet_1.id,
     aws_subnet.rsc_exocompute_subnet_2.id
@@ -98,7 +113,7 @@ resource "aws_vpc_endpoint" "ecr_dkr" {
     aws_security_group.control-plane.id,
     aws_security_group.worker-node.id
   ]
-  
+
   subnet_ids = [
     aws_subnet.rsc_exocompute_subnet_1.id,
     aws_subnet.rsc_exocompute_subnet_2.id
@@ -120,7 +135,7 @@ resource "aws_vpc_endpoint" "autoscaling" {
     aws_security_group.control-plane.id,
     aws_security_group.worker-node.id
   ]
-  
+
   subnet_ids = [
     aws_subnet.rsc_exocompute_subnet_1.id,
     aws_subnet.rsc_exocompute_subnet_2.id
@@ -134,9 +149,9 @@ resource "aws_vpc_endpoint" "autoscaling" {
 }
 
 resource "aws_subnet" "rsc_exocompute_public" {
-  vpc_id     = aws_vpc.rsc_exocompute.id
-  cidr_block = var.aws_exocompute_subnet_public_cidr
-  availability_zone = "${data.aws_region.current.name}a"
+  vpc_id                  = aws_vpc.rsc_exocompute.id
+  cidr_block              = var.aws_exocompute_subnet_public_cidr
+  availability_zone       = local.az1
   map_public_ip_on_launch = true
 
   tags = {
@@ -145,26 +160,26 @@ resource "aws_subnet" "rsc_exocompute_public" {
 }
 
 resource "aws_subnet" "rsc_exocompute_subnet_1" {
-  vpc_id     = aws_vpc.rsc_exocompute.id
-  cidr_block = var.aws_exocompute_subnet_1_cidr
-  availability_zone = "${data.aws_region.current.name}a"
+  vpc_id                  = aws_vpc.rsc_exocompute.id
+  cidr_block              = var.aws_exocompute_subnet_1_cidr
+  availability_zone       = local.az1
   map_public_ip_on_launch = false
 
 
   tags = {
-    Name = var.aws_exocompute_subnet_private_1_name
+    Name                                                = var.aws_exocompute_subnet_private_1_name
     "kubernetes.io/cluster/${var.aws_eks_cluster_name}" = "shared"
   }
 }
 
 resource "aws_subnet" "rsc_exocompute_subnet_2" {
-  vpc_id     = aws_vpc.rsc_exocompute.id
-  cidr_block = var.aws_exocompute_subnet_2_cidr
-  availability_zone = "${data.aws_region.current.name}b"
+  vpc_id                  = aws_vpc.rsc_exocompute.id
+  cidr_block              = var.aws_exocompute_subnet_2_cidr
+  availability_zone       = local.az2
   map_public_ip_on_launch = false
 
   tags = {
-    Name = var.aws_exocompute_subnet_private_2_name
+    Name                                                = var.aws_exocompute_subnet_private_2_name
     "kubernetes.io/cluster/${var.aws_eks_cluster_name}" = "shared"
 
   }
