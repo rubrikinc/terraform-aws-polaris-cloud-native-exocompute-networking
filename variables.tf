@@ -136,3 +136,9 @@ variable "rsc_exocompute_region" {
   type        = string
   description = "AWS region for the Exocompute cluster."
 }
+
+variable "use_availability_zones_a_and_b" {
+  type        = bool
+  description = "Setting this variable to `true` forces the use of availability zones `a` and `b` for the subnets in the VPC. The default behavior is to use the first two availability zones in the region."
+  default     = false
+}

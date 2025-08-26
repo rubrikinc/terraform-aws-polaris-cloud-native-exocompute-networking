@@ -1,6 +1,11 @@
 # Terraform Module - AWS Rubrik Cloud Native Exocompute Networking
 
-This module provides a working example of how to configure the network that the Exocompute EKS cluster will run on. While there are many networking designs this module takes the example of the EKS cluster running on 2 private subnets. Internet access is provided via a NAT gateway to a public subnet, which the module also defines. It is also important to note that this module tags the subnets and any other resources so that the EKS cluster will consume and use them. The minimum network ports have been opened in the NACLs and Security Groups for the Exocompute cluster to function, either privately or publicity. 
+This module provides a working example of how to configure the network that the Exocompute EKS cluster will run on.
+While there are many networking designs this module takes the example of the EKS cluster running on 2 private subnets.
+Internet access is provided via a NAT gateway to a public subnet, which the module also defines. It is also important
+to note that this module tags the subnets and any other resources so that the EKS cluster will consume and use them.
+The minimum network ports have been opened in the NACLs and Security Groups for the Exocompute cluster to function,
+either privately or publicly. 
 
 ## Prerequisites
 
@@ -24,6 +29,14 @@ module "polaris-aws-cloud-native-exocompute-networking" {
 }
 ```
 
+## Changelog
+
+### v0.2.0
+* Relax the AWS provider version constraint to `>=5.26.0`.
+* Dynamically look up the primary and secondary availability zones from the set of available zones for the region.
+  Previously the availability zones were hardcoded to `a` and `b`. The `use_availability_zones_a_and_b` input variable
+  can be set to `true` to restore the previous behavior.
+
 <!-- BEGIN_TF_DOCS -->
 
 
@@ -32,13 +45,13 @@ module "polaris-aws-cloud-native-exocompute-networking" {
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >=1.5.6 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | ~>5.26.0 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >=5.26.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | ~>5.26.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 6.10.0 |
 
 ## Resources
 
@@ -73,6 +86,7 @@ module "polaris-aws-cloud-native-exocompute-networking" {
 | [aws_vpc_security_group_ingress_rule.worker-node_control-plane_443](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_security_group_ingress_rule) | resource |
 | [aws_vpc_security_group_ingress_rule.worker-node_worker-node_all](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_security_group_ingress_rule) | resource |
 | [aws_vpc_security_group_ingress_rule.worker_cluster_1025_65535](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_security_group_ingress_rule) | resource |
+| [aws_availability_zones.available](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/availability_zones) | data source |
 | [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
 
 ## Modules
@@ -107,6 +121,7 @@ No modules.
 | <a name="input_aws_exocompute_vpc_name"></a> [aws\_exocompute\_vpc\_name](#input\_aws\_exocompute\_vpc\_name) | VPC name for the AWS account hosting Exocompute. | `string` | `"Rubrik Exocompute VPC"` | no |
 | <a name="input_aws_profile"></a> [aws\_profile](#input\_aws\_profile) | AWS profile name. | `string` | n/a | yes |
 | <a name="input_rsc_exocompute_region"></a> [rsc\_exocompute\_region](#input\_rsc\_exocompute\_region) | AWS region for the Exocompute cluster. | `string` | n/a | yes |
+| <a name="input_use_availability_zones_a_and_b"></a> [use\_availability\_zones\_a\_and\_b](#input\_use\_availability\_zones\_a\_and\_b) | Setting this variable to `true` forces the use of availability zones `a` and `b` for the subnets in the VPC. The default behavior is to use the first two availability zones in the region. | `bool` | `false` | no |
 
 ## Outputs
 
@@ -116,6 +131,5 @@ No modules.
 | <a name="output_aws_security_group_worker-node_id"></a> [aws\_security\_group\_worker-node\_id](#output\_aws\_security\_group\_worker-node\_id) | n/a |
 | <a name="output_rsc_exocompute_subnet_1_id"></a> [rsc\_exocompute\_subnet\_1\_id](#output\_rsc\_exocompute\_subnet\_1\_id) | n/a |
 | <a name="output_rsc_exocompute_subnet_2_id"></a> [rsc\_exocompute\_subnet\_2\_id](#output\_rsc\_exocompute\_subnet\_2\_id) | n/a |
-
 
 <!-- END_TF_DOCS -->
