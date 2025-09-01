@@ -66,11 +66,6 @@ variable "aws_exocompute_vpc_cidr" {
   description = "VPC CIDR for the AWS account hosting Exocompute."
 }
 
-variable "aws_profile" {
-  description = "AWS profile name."
-  type        = string
-}
-
 variable "aws_exocompute_subnet_private_1_name" {
   description = "Name for the first private subnet that Exocompute will use in the AWS account and region."
   type        = string
@@ -130,11 +125,6 @@ variable "aws_exocompute_vpc_name" {
   description = "VPC name for the AWS account hosting Exocompute."
   type        = string
   default     = "Rubrik Exocompute VPC"
-}
-
-variable "rsc_exocompute_region" {
-  type        = string
-  description = "AWS region for the Exocompute cluster."
 }
 
 variable "use_availability_zones_a_and_b" {
