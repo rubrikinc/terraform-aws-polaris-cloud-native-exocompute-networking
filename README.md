@@ -1,5 +1,4 @@
 # Terraform Module - AWS Rubrik Cloud Native Exocompute Networking
-
 This module provides a working example of how to configure the network that the Exocompute EKS cluster will run on.
 While there are many networking designs this module takes the example of the EKS cluster running on 2 private subnets.
 Internet access is provided via a NAT gateway to a public subnet, which the module also defines. It is also important
@@ -7,27 +6,34 @@ to note that this module tags the subnets and any other resources so that the EK
 The minimum network ports have been opened in the NACLs and Security Groups for the Exocompute cluster to function,
 either privately or publicly. 
 
-## Prerequisites
-
-There are a few services you'll need in order to get this project off the ground:
-
-- [Terraform](https://www.terraform.io/downloads.html) v1.5.6 or greater
-- [Install the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) - Needed for Terraform to authenticate with AWS
-
 ## Usage
 
 ```hcl
-module "polaris-aws-cloud-native-exocompute-networking" {
+module "exocompute_networking" {
   source  = "rubrikinc/polaris-cloud-native-exocompute-networking/aws"
   
-  aws_exocompute_subnet_public_cidr   = "172.21.0.0/24"
-  aws_exocompute_subnet_1_cidr        = "172.21.1.0/24"
-  aws_exocompute_subnet_2_cidr        = "172.21.2.0/24"
-  aws_exocompute_vpc_cidr             = "172.21.0.0/16"
+  aws_exocompute_subnet_public_cidr = "172.21.0.0/24"
+  aws_exocompute_subnet_1_cidr      = "172.21.1.0/24"
+  aws_exocompute_subnet_2_cidr      = "172.21.2.0/24"
+  aws_exocompute_vpc_cidr           = "172.21.0.0/16"
 }
 ```
 
+## Examples
+- [Basic Exocompute](examples/basic)
+- [RSC Managed Exocompute](examples/rsc_managed_exocompute)
+
 ## Changelog
+
+## v0.3.0
+* Remove the AWS provider block from the module. Must now be provided in the Terraform root module.
+* Add module usage examples.
+* Mark the `aws_profile` and `rsc_exocompute_region` variables as deprecated. They are no longer used by the module and
+  have no replacements. The Exocompute region is now the region used by the AWS provider.
+* Add support for specifying additional tags to the resources being created in AWS.
+* Add the `aws_security_group_control_plane_id` and `aws_security_group_worker_node_id` outputs. The existing outputs
+  for the values partially used hyphens instead of underscores in their names.
+* Add the `rsc_exocompute_vpc_id` output.
 
 ### v0.2.0
 * Relax the AWS provider version constraint to `>=5.26.0`.
@@ -49,7 +55,7 @@ module "polaris-aws-cloud-native-exocompute-networking" {
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 6.10.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >=5.26.0 |
 
 ## Resources
 
@@ -117,6 +123,9 @@ No modules.
 | <a name="input_aws_exocompute_vpc_endpoint_eks_name"></a> [aws\_exocompute\_vpc\_endpoint\_eks\_name](#input\_aws\_exocompute\_vpc\_endpoint\_eks\_name) | EKS VPC endpoint name for the AWS account hosting Exocompute. | `string` | `"Rubrik Exocompute VPC EKS Endpoint"` | no |
 | <a name="input_aws_exocompute_vpc_endpoint_s3_name"></a> [aws\_exocompute\_vpc\_endpoint\_s3\_name](#input\_aws\_exocompute\_vpc\_endpoint\_s3\_name) | S3 VPC endpoint name for the AWS account hosting Exocompute. | `string` | `"Rubrik Exocompute VPC S3 Endpoint"` | no |
 | <a name="input_aws_exocompute_vpc_name"></a> [aws\_exocompute\_vpc\_name](#input\_aws\_exocompute\_vpc\_name) | VPC name for the AWS account hosting Exocompute. | `string` | `"Rubrik Exocompute VPC"` | no |
+| <a name="input_aws_profile"></a> [aws\_profile](#input\_aws\_profile) | AWS profile name. | `string` | `null` | no |
+| <a name="input_rsc_exocompute_region"></a> [rsc\_exocompute\_region](#input\_rsc\_exocompute\_region) | AWS region for the Exocompute cluster. | `string` | `null` | no |
+| <a name="input_tags"></a> [tags](#input\_tags) | Tags to apply to AWS resources created. | `map(string)` | `null` | no |
 | <a name="input_use_availability_zones_a_and_b"></a> [use\_availability\_zones\_a\_and\_b](#input\_use\_availability\_zones\_a\_and\_b) | Setting this variable to `true` forces the use of availability zones `a` and `b` for the subnets in the VPC. The default behavior is to use the first two availability zones in the region. | `bool` | `false` | no |
 
 ## Outputs
@@ -124,8 +133,11 @@ No modules.
 | Name | Description |
 |------|-------------|
 | <a name="output_aws_security_group_control-plane_id"></a> [aws\_security\_group\_control-plane\_id](#output\_aws\_security\_group\_control-plane\_id) | n/a |
+| <a name="output_aws_security_group_control_plane_id"></a> [aws\_security\_group\_control\_plane\_id](#output\_aws\_security\_group\_control\_plane\_id) | n/a |
 | <a name="output_aws_security_group_worker-node_id"></a> [aws\_security\_group\_worker-node\_id](#output\_aws\_security\_group\_worker-node\_id) | n/a |
+| <a name="output_aws_security_group_worker_node_id"></a> [aws\_security\_group\_worker\_node\_id](#output\_aws\_security\_group\_worker\_node\_id) | n/a |
 | <a name="output_rsc_exocompute_subnet_1_id"></a> [rsc\_exocompute\_subnet\_1\_id](#output\_rsc\_exocompute\_subnet\_1\_id) | n/a |
 | <a name="output_rsc_exocompute_subnet_2_id"></a> [rsc\_exocompute\_subnet\_2\_id](#output\_rsc\_exocompute\_subnet\_2\_id) | n/a |
+| <a name="output_rsc_exocompute_vpc_id"></a> [rsc\_exocompute\_vpc\_id](#output\_rsc\_exocompute\_vpc\_id) | n/a |
 
 <!-- END_TF_DOCS -->

@@ -21,9 +21,9 @@ resource "aws_vpc" "rsc_exocompute" {
   enable_dns_hostnames = true
   enable_dns_support   = true
 
-  tags = {
+  tags = merge({
     Name = var.aws_exocompute_vpc_name
-  }
+  }, var.tags)
 }
 
 resource "aws_vpc_endpoint" "rsc_exocompute" {
@@ -32,9 +32,9 @@ resource "aws_vpc_endpoint" "rsc_exocompute" {
   route_table_ids   = [aws_route_table.rsc_exocompute_private.id]
   vpc_endpoint_type = "Gateway"
 
-  tags = {
+  tags = merge({
     Name = var.aws_exocompute_vpc_endpoint_s3_name
-  }
+  }, var.tags)
 }
 
 resource "aws_vpc_endpoint" "ec2" {
@@ -54,9 +54,9 @@ resource "aws_vpc_endpoint" "ec2" {
 
   private_dns_enabled = true
 
-  tags = {
+  tags = merge({
     Name = var.aws_exocompute_vpc_endpoint_ec2_name
-  }
+  }, var.tags)
 }
 
 resource "aws_vpc_endpoint" "eks" {
@@ -77,9 +77,9 @@ resource "aws_vpc_endpoint" "eks" {
 
   private_dns_enabled = true
 
-  tags = {
+  tags = merge({
     Name = var.aws_exocompute_vpc_endpoint_eks_name
-  }
+  }, var.tags)
 }
 
 resource "aws_vpc_endpoint" "ecr_api" {
@@ -99,9 +99,9 @@ resource "aws_vpc_endpoint" "ecr_api" {
 
   private_dns_enabled = true
 
-  tags = {
+  tags = merge({
     Name = var.aws_exocompute_vpc_endpoint_ecr_api_name
-  }
+  }, var.tags)
 }
 
 resource "aws_vpc_endpoint" "ecr_dkr" {
@@ -121,9 +121,9 @@ resource "aws_vpc_endpoint" "ecr_dkr" {
 
   private_dns_enabled = true
 
-  tags = {
+  tags = merge({
     Name = var.aws_exocompute_vpc_endpoint_ecr_dkr_name
-  }
+  }, var.tags)
 }
 
 resource "aws_vpc_endpoint" "autoscaling" {
@@ -143,9 +143,9 @@ resource "aws_vpc_endpoint" "autoscaling" {
 
   private_dns_enabled = true
 
-  tags = {
+  tags = merge({
     Name = var.aws_exocompute_vpc_endpoint_autoscaling_name
-  }
+  }, var.tags)
 }
 
 resource "aws_subnet" "rsc_exocompute_public" {
@@ -154,9 +154,9 @@ resource "aws_subnet" "rsc_exocompute_public" {
   availability_zone       = local.az1
   map_public_ip_on_launch = true
 
-  tags = {
+  tags = merge({
     Name = var.aws_exocompute_subnet_public_name
-  }
+  }, var.tags)
 }
 
 resource "aws_subnet" "rsc_exocompute_subnet_1" {
@@ -166,10 +166,10 @@ resource "aws_subnet" "rsc_exocompute_subnet_1" {
   map_public_ip_on_launch = false
 
 
-  tags = {
+  tags = merge({
     Name                                                = var.aws_exocompute_subnet_private_1_name
     "kubernetes.io/cluster/${var.aws_eks_cluster_name}" = "shared"
-  }
+  }, var.tags)
 }
 
 resource "aws_subnet" "rsc_exocompute_subnet_2" {
@@ -178,36 +178,35 @@ resource "aws_subnet" "rsc_exocompute_subnet_2" {
   availability_zone       = local.az2
   map_public_ip_on_launch = false
 
-  tags = {
+  tags = merge({
     Name                                                = var.aws_exocompute_subnet_private_2_name
     "kubernetes.io/cluster/${var.aws_eks_cluster_name}" = "shared"
-
-  }
+  }, var.tags)
 }
 
 resource "aws_eip" "rsc_exocompute_nat_eip" {
   domain = "vpc"
 
-  tags = {
+  tags = merge({
     Name = var.aws_exocompute_nat_eip_name
-  }
+  }, var.tags)
 }
 
 resource "aws_internet_gateway" "rsc_exocompute" {
   vpc_id = aws_vpc.rsc_exocompute.id
 
-  tags = {
+  tags = merge({
     Name = var.aws_exocompute_igw_name
-  }
+  }, var.tags)
 }
 
 resource "aws_nat_gateway" "rsc_exocompute" {
   allocation_id = aws_eip.rsc_exocompute_nat_eip.id
   subnet_id     = aws_subnet.rsc_exocompute_public.id
 
-  tags = {
+  tags = merge({
     Name = var.aws_exocompute_nat_gateway_name
-  }
+  }, var.tags)
 
   # To ensure proper ordering, it is recommended to add an explicit dependency
   # on the Internet Gateway for the VPC.
@@ -217,17 +216,17 @@ resource "aws_nat_gateway" "rsc_exocompute" {
 resource "aws_route_table" "rsc_exocompute_private" {
   vpc_id = aws_vpc.rsc_exocompute.id
 
-  tags = {
+  tags = merge({
     Name = var.aws_exocompute_private_route_table_name
-  }
+  }, var.tags)
 }
 
 resource "aws_route_table" "rsc_exocompute_public" {
   vpc_id = aws_vpc.rsc_exocompute.id
 
-  tags = {
+  tags = merge({
     Name = var.aws_exocompute_public_route_table_name
-  }
+  }, var.tags)
 }
 
 resource "aws_route" "rsc_exocompute_public_internet_gateway" {
@@ -265,9 +264,9 @@ resource "aws_security_group" "control-plane" {
   name        = "Exocompute-eks-control-plane-customer-managed"
   vpc_id      = aws_vpc.rsc_exocompute.id
 
-  tags = {
+  tags = merge({
     Name = var.aws_exocompute_security_group_control_plane_name
-  }
+  }, var.tags)
 }
 
 resource "aws_security_group" "worker-node" {
@@ -275,9 +274,9 @@ resource "aws_security_group" "worker-node" {
   name        = "Exocompute-eks-worker-node-customer-managed"
   vpc_id      = aws_vpc.rsc_exocompute.id
 
-  tags = {
+  tags = merge({
     Name = var.aws_exocompute_security_group_worker_node_name
-  }
+  }, var.tags)
 }
 
 # Ingress/egress rules for the EKS control plane security group.
@@ -312,7 +311,7 @@ resource "aws_vpc_security_group_egress_rule" "control-plane_any_ipv4" {
   ip_protocol       = "-1"
 }
 
-# Ingress rules for the EKS worker security group.
+# Ingress/egress rules for the EKS worker security group.
 
 resource "aws_vpc_security_group_ingress_rule" "worker-node_worker-node_all" {
   description = "Inbound traffic from worker nodes"
