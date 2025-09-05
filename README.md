@@ -24,8 +24,6 @@ module "polaris-aws-cloud-native-exocompute-networking" {
   aws_exocompute_subnet_1_cidr        = "172.21.1.0/24"
   aws_exocompute_subnet_2_cidr        = "172.21.2.0/24"
   aws_exocompute_vpc_cidr             = "172.21.0.0/16"
-  aws_profile                         = var.aws_profile
-  rsc_exocompute_region               = var.exocompute_region
 }
 ```
 
@@ -119,8 +117,6 @@ No modules.
 | <a name="input_aws_exocompute_vpc_endpoint_eks_name"></a> [aws\_exocompute\_vpc\_endpoint\_eks\_name](#input\_aws\_exocompute\_vpc\_endpoint\_eks\_name) | EKS VPC endpoint name for the AWS account hosting Exocompute. | `string` | `"Rubrik Exocompute VPC EKS Endpoint"` | no |
 | <a name="input_aws_exocompute_vpc_endpoint_s3_name"></a> [aws\_exocompute\_vpc\_endpoint\_s3\_name](#input\_aws\_exocompute\_vpc\_endpoint\_s3\_name) | S3 VPC endpoint name for the AWS account hosting Exocompute. | `string` | `"Rubrik Exocompute VPC S3 Endpoint"` | no |
 | <a name="input_aws_exocompute_vpc_name"></a> [aws\_exocompute\_vpc\_name](#input\_aws\_exocompute\_vpc\_name) | VPC name for the AWS account hosting Exocompute. | `string` | `"Rubrik Exocompute VPC"` | no |
-| <a name="input_aws_profile"></a> [aws\_profile](#input\_aws\_profile) | AWS profile name. | `string` | n/a | yes |
-| <a name="input_rsc_exocompute_region"></a> [rsc\_exocompute\_region](#input\_rsc\_exocompute\_region) | AWS region for the Exocompute cluster. | `string` | n/a | yes |
 | <a name="input_use_availability_zones_a_and_b"></a> [use\_availability\_zones\_a\_and\_b](#input\_use\_availability\_zones\_a\_and\_b) | Setting this variable to `true` forces the use of availability zones `a` and `b` for the subnets in the VPC. The default behavior is to use the first two availability zones in the region. | `bool` | `false` | no |
 
 ## Outputs
