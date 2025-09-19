@@ -76,8 +76,8 @@ variable "aws_exocompute_subnet_private_2_name" {
   description = "Name for the second private subnet that Exocompute will use in the AWS account and region."
   type        = string
   default     = "Rubrik Exocompute Subnet 2"
-
 }
+
 variable "aws_exocompute_subnet_public_name" {
   description = "Name for the public subnet that Exocompute will use in the AWS account and region."
   type        = string
@@ -88,7 +88,6 @@ variable "aws_exocompute_vpc_endpoint_autoscaling_name" {
   description = "Autoscaling VPC endpoint name for the AWS account hosting Exocompute."
   type        = string
   default     = "Rubrik Exocompute VPC Autoscaling Endpoint"
-
 }
 
 variable "aws_exocompute_vpc_endpoint_ec2_name" {
@@ -131,4 +130,35 @@ variable "use_availability_zones_a_and_b" {
   type        = bool
   description = "Setting this variable to `true` forces the use of availability zones `a` and `b` for the subnets in the VPC. The default behavior is to use the first two availability zones in the region."
   default     = false
+}
+
+variable "tags" {
+  type        = map(string)
+  default     = null
+  description = "Tags to apply to AWS resources created."
+}
+
+# Deprecated variables.
+
+variable "aws_profile" {
+  type        = string
+  default     = null
+  description = "AWS profile name."
+}
+
+variable "rsc_exocompute_region" {
+  type        = string
+  default     = null
+  description = "AWS region for the Exocompute cluster."
+}
+
+check "deprecations" {
+  assert {
+    condition     = var.aws_profile == null
+    error_message = "The aws_profile variable has been deprecated. It has no replacement and will be removed in a future release. To continue using an AWS profile, pass the profile to the AWS provider block in the root module."
+  }
+  assert {
+    condition     = var.rsc_exocompute_region == null
+    error_message = "The rsc_exocompute_region variable has been deprecated. It has no replacement and will be removed in a future release. The Exocompute region is now the region used by the AWS provider."
+  }
 }
