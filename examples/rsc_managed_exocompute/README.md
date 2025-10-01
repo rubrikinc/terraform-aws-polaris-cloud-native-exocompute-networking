@@ -21,6 +21,7 @@ resources.
 |------|---------|
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >=5.26.0 |
 | <a name="requirement_polaris"></a> [polaris](#requirement\_polaris) | >=1.0.0 |
+| <a name="requirement_time"></a> [time](#requirement\_time) | >=0.13.1 |
 
 ## Providers
 
@@ -28,25 +29,29 @@ resources.
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >=5.26.0 |
 | <a name="provider_polaris"></a> [polaris](#provider\_polaris) | >=1.0.0 |
+| <a name="provider_time"></a> [time](#provider\_time) | >=0.13.1 |
 
 ## Resources
 
 | Name | Type |
 |------|------|
 | [polaris_aws_exocompute.rsc_managed](https://registry.terraform.io/providers/rubrikinc/polaris/latest/docs/resources/aws_exocompute) | resource |
+| [time_sleep.wait_for_rsc](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep) | resource |
 | [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
 
 ## Modules
 
 | Name | Source | Version |
 |------|--------|---------|
+| <a name="module_cloud_native"></a> [cloud\_native](#module\_cloud\_native) | rubrikinc/polaris-cloud-native/aws | n/a |
 | <a name="module_exocompute_networking"></a> [exocompute\_networking](#module\_exocompute\_networking) | ../../ | n/a |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_rsc_aws_cnp_account_id"></a> [rsc\_aws\_cnp\_account\_id](#input\_rsc\_aws\_cnp\_account\_id) | Polaris cloud account ID for the AWS account hosting Exocompute. | `string` | n/a | yes |
+| <a name="input_aws_account_id"></a> [aws\_account\_id](#input\_aws\_account\_id) | AWS account ID of the account to protect with RSC. | `string` | n/a | yes |
+| <a name="input_aws_account_name"></a> [aws\_account\_name](#input\_aws\_account\_name) | AWS account name of the account to protect with RSC. | `string` | n/a | yes |
 
 ## Outputs
 
