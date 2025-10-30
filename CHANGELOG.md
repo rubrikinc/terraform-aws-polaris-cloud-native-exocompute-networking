@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.3.1
+* Improve the RSC managed Exocompute example.
+
 ## v0.3.0
 * Remove the AWS provider block from the module. Must now be provided in the Terraform root module.
 * Add module usage examples.
